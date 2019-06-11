@@ -5,11 +5,11 @@ from datetime import timedelta as delta
 from matplotlib import pyplot as plt
 
 regos= pd.read_csv("rego_table.csv")
-ferrys = pd.read_csv("ferrys.csv")
+ferrys = pd.read_csv("ferryes.csv")
 ferrys.scheduledstart = ferrys.scheduledstart.apply(lambda x: dt.strptime(x, '%Y-%m-%d %H:%M:%S.000' ))
 
 og_maints = pd.read_csv("maints.csv")
-keyWords = ['Ferry', 'FERRY','ferry','owed','OWED','POS ',"Pos ",'pos ']#,' TO ',' to ']
+keyWords = ['Ferry', 'FERRY','ferry','owed','OWED','POS',"Pos",'pos']#,' TO ',' to ']
 maints=og_maints[og_maints.change_attributes_block_ids.str.contains("|".join(keyWords), na=False)]
 maints.scheduledstart = maints.scheduledstart.apply(lambda x: dt.strptime(x, '%Y-%m-%d %H:%M:%S.000' ))
 maints.source = maints.source.apply(lambda text: text.split('~!~')[1])

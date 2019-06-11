@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 
 
 og_maints = pd.read_csv("maints.csv")
-keyWords = ['Ferry', 'FERRY','ferry','owed','OWED','POS ',"Pos ",'pos ']#,' TO ',' to ']
+keyWords = ['Ferry', 'FERRY','ferry','owed','OWED','POS ',"Pos ",'pos']#,' TO ',' to ']
 ferry_doc=[6100,6155]#%61-n-dayofweek
 maints=og_maints[og_maints.change_attributes_block_ids.str.contains("|".join(keyWords), na=False)]
 maints.scheduledstart = maints.scheduledstart.apply(lambda x: dt.strptime(x, '%Y-%m-%d %H:%M:%S.000' ))
