@@ -18,7 +18,7 @@ ferrys.rego = ferrys.source.apply(lambda text: text.split('~!~')[2])
 #ferrys.rego=ferrys.change_source.apply(lambda text: text.split('~!~')[2])
 
 og_maints = pd.read_csv("maints.csv")
-keyWords = ['Ferry', 'FERRY','ferry','owed','OWED']#,' TO ',' to ']
+keyWords = ['Ferry', 'FERRY','ferry','owed','OWED','POS',"Pos",'pos']#,' TO ',' to ']
 maints=og_maints[og_maints.change_attributes_block_ids.str.contains("|".join(keyWords), na=False)]
 maints["rego"] = np.nan
 maints.scheduledstart = maints.scheduledstart.apply(lambda x: dt.strptime(x, '%Y-%m-%d %H:%M:%S.000' ))
@@ -30,7 +30,8 @@ maints["departure_port"]= maints.change_targetasrobject_id.apply(lambda text: te
 arrival_port=[]
 fleet=[]
 subfleet=[]
-
+#TODO: make all capital, if ferry check for word to and see if after ferry to ot ferry CBR to CNS something len()==3
+# FERRRY OBO PER  check if second word of ferry is 3 then choosen next one if three if ferry choose this method even before =0 eg TBA=0 or exemption?
 for index, row in maints.iterrows():
     compatible=np.where(fleet_regos.rego==row.rego)[0]
     index_port=fleet_regos.iloc[[compatible[0]]].index[0]
@@ -45,12 +46,15 @@ for index, row in maints.iterrows():
             second=listvalues[-1].split('=0')[0]
             if len(second)==3 :
                 found_vals=second
+            elif word==5:
+                found_vals=listvalues[(ind-1)%len(listvalues)]
             elif len(first)==3:
                 found_vals=first
             elif '=0' in first and len(first.split('=0')[0])==3:
                 found_vals=first.split('=0')[0]
             elif len(listvalues[(ind+2)%len(listvalues)])==3:
                 found_vals=listvalues[(ind+2)%len(listvalues)]   
+            print(listvalues,found_vals)
     arrival_port.append(found_vals)
     
 maints["arrival_port"] = arrival_port
@@ -86,5 +90,5 @@ for index, row in maints.iterrows():
             print('Maint is published at ',maintDelta)
             print('Flight is published at ',ferryDelta)
             print()
-            flightsScheduled[fnum].append(maintDelta)
-            
+            flightsScheduled[fnum].append(maintPublishedDelta)
+#            
